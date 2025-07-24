@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us | Forever in Profit</title>
+  <link rel="stylesheet" href="Aboutus.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <section class="about-section">
+    <div class="about-images">
+      <img src="aboutus.jpg" alt="Sigil Image 1" class="hover-pop" />
+      <img src="aboutus2.jpg" alt="Sigil Image 2" class="hover-pop" />
+    </div>
+
+    <div class="about-text">
+      <h1 class="fade-in">About Us</h1>
+      <p class="fade-up">
+        Forever in Profit is more than just a collection — it's a movement.<br />
+        We are a tribe of artists, builders, believers, and traders.<br />
+        Inspired by the language of symbols, memes, and tech, our audio speaks for us.<br />
+        FIP shares trading tips & chart setups, real-time signals, builds discipline with rituals & polls, supports every win, and grows bags together.
+      </p>
+    </div>
+  </section>
+
+  <!-- Modal for image preview -->
+  <div class="image-modal" id="imageModal">
+    <span class="close-btn" onclick="closeModal()">×</span>
+    <img class="modal-content" id="modalImg" />
+  </div>
+
+  <script>
+    // Image click-to-enlarge modal
+    const modal = document.getElementById("imageModal");
+    const modalImg = document.getElementById("modalImg");
+    const images = document.querySelectorAll(".hover-pop");
+
+    images.forEach(img => {
+      img.onclick = () => {
+        modal.style.display = "flex";
+        modalImg.src = img.src;
+      };
+    });
+
+    function closeModal() {
+      modal.style.display = "none";
+    }
+  </script>
+
+
+<footer class="site-footer">
+  <div class="footer-content">
+    <div class="footer-left">
+      <h2>Forever in Profit</h2>
+      <p>Built by traders, for visionaries. The future is purple.</p>
+    </div>
+    <div class="footer-center">
+      <a href="index.html">Home</a>
+      <a href="NFTs.html">Mint</a>
+      <a href="Gallery.html">Gallery</a>
+      <a href="Aboutus.html">About</a>
+    </div>
+    <div class="footer-right">
+      <a href="https://x.com/i/communities/1944756883031466391" target="_blank" aria-label="Twitter">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="https://discord.com/" target="_blank" aria-label="Discord">
+        <i class="fab fa-discord"></i>
+      </a>
+      <a href="https://t.me/c/2800967941/7980" target="_blank" aria-label="Telegram">
+        <i class="fab fa-telegram"></i>
+      </a>
+    </div>
+  </div>
+  <p class="footer-bottom">&copy; 2025 Forever in Profit. All rights reserved.</p>
+</footer>
+</body>
+</html>

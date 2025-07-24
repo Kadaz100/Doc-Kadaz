@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Forever in Profit - Home</title>
+  <link rel="stylesheet" href="home.css">
+  <!-- WalletConnect & Web3 -->
+<script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3@1.8.2/dist/web3.min.js"></script>
+</head>
+<body class="home">
+  <header>
+    <div class="logo-area">
+  <img src="forever13.jpg" alt="Logo" class="logo-icon" />
+  <span class="logo-text">Forever in Profit</span>
+</div>
+    <nav class="main-nav">
+        <ul>
+      <li><a href="NFTs.html">NFTs</a></li>
+      <li><a href="#">Collections</a></li>
+     <li><a href="Gallery.html">Gallery</a></li>
+     <li><a href="Aboutus.html">About Us</a></li>
+     </ul>
+    </nav>
+    <button class="connect-wallet"  id="connectWalletBtn" onclick="openModal()">Connect Wallet</button>
+    <!-- Wallet Modal -->
+<div id="walletModal" class="wallet-modal">
+  <div class="wallet-modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2>Connect Your Wallet</h2>
+    <button class="wallet-btn" id="metamask-btn">🦊 MetaMask</button>
+    <button class="wallet-btn" id="phantom-btn">👻 Phantom</button>
+    <button class="wallet-btn" id="walletconnect-btn">🔗 WalletConnect</button>
+  </div>
+</div>
+    
+  </header>
+
+  <main>
+    <section class="stats-section">
+  <div class="text-column">
+    <h2 class="section-title">Explore the Future of NFTs</h2>
+    <p class="section-description">
+      Enter a world where art meets blockchain.<br />
+      Each piece is a portal to creativity, rarity, and digital ownership.<br />
+      Start your collection and shape the culture of tomorrow.
+    </p><section class="nft-showcase">
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <span class="stat-number">+120</span>
+        <span class="stat-label">Collections Minted</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">45K+</span>
+        <span class="stat-label">NFTs Created</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">1.2K</span>
+        <span class="stat-label">Active Wallets</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">+3K</span>
+        <span class="stat-label">Active Community</span>
+      </div>
+
+       <div class="explore-button-container">
+    <a href="NFTs.html" class="explore-btn">Explore NFTs</a>
+  </div>
+    </div>
+  </div>
+
+  <div class="image-column">
+    <img src="aboutus.jpg" class="nft-image pop-image" alt="NFT 1" />
+    <img src="aboutus2.jpg" class="nft-image pop-image" alt="NFT 2" />
+    <img src="aboutus3.jpg" class="nft-image pop-image" alt="NFT 3" />
+  </div>
+
+</section>
+  </main>
+  
+  <script>
+  const modal = document.getElementById("walletModal");
+  const connectBtn = document.getElementById("connectWalletBtn");
+  const closeBtn = document.querySelector(".close");
+
+  // --- Modal Controls ---
+  function openModal() {
+    modal.style.display = "block";
+  }
+
+  function closeModal() {
+    modal.style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    if (event.target === modal) {
+      closeModal();
+    }
+  }
+
+  // --- Format Address ---
+  function shortenAddress(address) {
+    return address.slice(0, 6) + "..." + address.slice(-4);
+  }
+
+  // --- Update Button ---
+  function updateConnectButton(address) {
+    connectBtn.innerText = shortenAddress(address);
+    connectBtn.disabled = true;
+  }
+
+  // --- MetaMask Connect ---
+  document.getElementById("metamask-btn").addEventListener("click", async () => {
+    if (typeof window.ethereum !== "undefined") {
+      try {
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        const address = accounts[0];
+        updateConnectButton(address);
+        closeModal();
+      } catch (err) {
+        alert("MetaMask connection failed.");
+        console.error(err);
+      }
+    } else {
+      alert("MetaMask is not installed.");
+    }
+  });
+
+  // --- Phantom Connect ---
+  document.getElementById("phantom-btn").addEventListener("click", async () => {
+    try {
+      if ("solana" in window) {
+        const provider = window.solana;
+        if (provider.isPhantom) {
+          const resp = await provider.connect();
+          const address = resp.publicKey.toString();
+          updateConnectButton(address);
+          closeModal();
+        }
+      } else {
+        alert("Phantom wallet not found.");
+      }
+    } catch (err) {
+      alert("Phantom connection failed.");
+      console.error(err);
+    }
+  });
+
+  // --- WalletConnect (Placeholder) ---
+  document.getElementById("walletconnect-btn").addEventListener("click", () => {
+    alert("WalletConnect support coming soon.");
+    closeModal();
+  });
+</script>
+  <script src="wallet.js"></script>
+  <script src="home.js"></script>
+  <script>
+    
+  </script>
+</body>
+</html>
