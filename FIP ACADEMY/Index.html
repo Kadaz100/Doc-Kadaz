@@ -1,0 +1,1724 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIP Academy - Student Portal</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-app-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-auth-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-firestore-compat.min.js"></script>
+    
+    <!-- PASTE BATCH 2 CSS HERE -->
+    
+    
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #7b2cbf 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+header {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-icon {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(45deg, #7b2cbf, #9d4edd, #c77dff);
+    border-radius: 8px;
+    padding: 0.3rem 0.5rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 8px rgba(123, 44, 191, 0.3);
+}
+
+.logo-f {
+    color: #ffffff;
+    margin-right: 1px;
+}
+
+.logo-i {
+    color: #e0aaff;
+    margin-right: 1px;
+}
+
+.logo-p {
+    color: #ffd700;
+}
+
+.logo-text {
+    font-size: 1.2rem;
+    font-weight: 600;
+    background: linear-gradient(45deg, #ffffff, #e0aaff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #c77dff;
+}
+
+.hero {
+    text-align: center;
+    padding: 4rem 0;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, rgba(199, 125, 255, 0.3) 0%, rgba(123, 44, 191, 0.1) 70%);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(45deg, #ffffff, #e0aaff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.hero-illustration {
+    width: 100%;
+    max-width: 500px;
+    margin: 2rem auto 3rem;
+    position: relative;
+}
+
+.illustration-container {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(199, 125, 255, 0.1));
+    border-radius: 50%;
+    width: 400px;
+    height: 400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.student-character {
+    width: 200px;
+    height: 200px;
+    position: relative;
+}
+
+.graduation-cap {
+    width: 80px;
+    height: 50px;
+    background: #1a1a2e;
+    border-radius: 50% 50% 0 0;
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+}
+
+.graduation-cap::after {
+    content: '';
+    width: 100px;
+    height: 100px;
+    background: #1a1a2e;
+    border-radius: 2px;
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    z-index: -1;
+}
+
+.graduation-tassel {
+    width: 3px;
+    height: 40px;
+    background: #ffd700;
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    border-radius: 2px;
+}
+
+.graduation-tassel::after {
+    content: '';
+    width: 15px;
+    height: 15px;
+    background: #ffd700;
+    border-radius: 50%;
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.student-head {
+    width: 100px;
+    height: 100px;
+    background: #ffb07a;
+    border-radius: 50%;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.student-hair {
+    width: 90px;
+    height: 50px;
+    background: #4a4a4a;
+    border-radius: 50px 50px 0 0;
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.student-eyes {
+    position: absolute;
+    top: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.eye {
+    width: 8px;
+    height: 8px;
+    background: #333;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.student-smile {
+    width: 20px;
+    height: 10px;
+    border: 2px solid #333;
+    border-top: none;
+    border-radius: 0 0 20px 20px;
+    position: absolute;
+    top: 55px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.student-body {
+    width: 120px;
+    height: 80px;
+    background: linear-gradient(135deg, #7b2cbf, #9d4edd);
+    border-radius: 20px 20px 0 0;
+    margin: 10px auto 0;
+    position: relative;
+}
+
+.diploma {
+    width: 30px;
+    height: 20px;
+    background: #fff;
+    border-radius: 2px;
+    position: absolute;
+    top: 20px;
+    right: -15px;
+    transform: rotate(-15deg);
+    border: 1px solid #ddd;
+}
+
+.diploma-ribbon {
+    width: 6px;
+    height: 8px;
+    background: #ff4757;
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.laptop {
+    width: 60px;
+    height: 40px;
+    background: #4a90e2;
+    border-radius: 4px;
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.laptop-screen {
+    width: 50px;
+    height: 30px;
+    background: #333;
+    border-radius: 2px;
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.floating-elements {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.floating-book {
+    position: absolute;
+    width: 20px;
+    height: 15px;
+    background: #ff6b6b;
+    border-radius: 2px;
+    top: 20%;
+    left: 15%;
+    animation: float 3s ease-in-out infinite;
+}
+
+.floating-code {
+    position: absolute;
+    color: #4ecdc4;
+    font-family: monospace;
+    font-size: 12px;
+    top: 30%;
+    right: 20%;
+    animation: float 4s ease-in-out infinite reverse;
+}
+
+.floating-brain {
+    position: absolute;
+    font-size: 20px;
+    top: 60%;
+    left: 10%;
+    animation: float 3.5s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+.hero p {
+    font-size: 1.3rem;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    opacity: 0.95;
+    line-height: 1.6;
+}
+
+.cta-button {
+    background: linear-gradient(45deg, #7b2cbf, #9d4edd);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(123, 44, 191, 0.4);
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 4rem 0;
+}
+
+.feature-card {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(199, 125, 255, 0.3);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    color: white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(123, 44, 191, 0.3);
+    border-color: rgba(199, 125, 255, 0.6);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #c77dff;
+}
+
+.feature-card p {
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+.login-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 3rem;
+    margin: 3rem auto;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.login-form h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #555;
+}
+
+.form-group input {
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #7b2cbf;
+    box-shadow: 0 0 0 3px rgba(123, 44, 191, 0.1);
+}
+
+.login-button {
+    background: linear-gradient(45deg, #7b2cbf, #9d4edd);
+    color: white;
+    padding: 1rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+}
+
+.curriculum-section {
+    padding: 4rem 0;
+}
+
+.curriculum-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.curriculum-module {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(199, 125, 255, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.curriculum-module:hover {
+    transform: translateY(-3px);
+    border-color: rgba(199, 125, 255, 0.6);
+}
+
+.curriculum-module.advanced {
+    border-color: rgba(157, 78, 221, 0.5);
+    background: rgba(123, 44, 191, 0.1);
+}
+
+.module-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.module-number {
+    background: linear-gradient(45deg, #7b2cbf, #9d4edd);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 1rem;
+    font-size: 0.9rem;
+}
+
+.module-header h3 {
+    color: #c77dff;
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+.module-content {
+    list-style: none;
+    padding: 0;
+}
+
+.module-content li {
+    color: #e0e0e0;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(199, 125, 255, 0.1);
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.module-content li:before {
+    content: "●";
+    color: #c77dff;
+    position: absolute;
+    left: 0;
+    font-size: 1.2rem;
+}
+
+.module-content li:last-child {
+    border-bottom: none;
+}
+
+.enroll-btn {
+    background: linear-gradient(45deg, #7b2cbf, #9d4edd);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 1rem;
+    width: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.enroll-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(123, 44, 191, 0.4);
+}
+
+.student-dashboard {
+    display: none;
+    min-height: 100vh;
+    background: #f8f9fa;
+}
+
+.student-nav {
+    background: #7b2cbf;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.student-nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.student-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+.student-logo .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.student-logo .logo-icon {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(45deg, #ffffff, rgba(255,255,255,0.8));
+    color: #7b2cbf;
+    border-radius: 8px;
+    padding: 0.3rem 0.5rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+}
+
+.student-logo .logo-f {
+    color: #7b2cbf;
+    margin-right: 1px;
+}
+
+.student-logo .logo-i {
+    color: #9d4edd;
+    margin-right: 1px;
+}
+
+.student-logo .logo-p {
+    color: #c77dff;
+}
+
+.student-logo .logo-text {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: white;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.nav-item {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.nav-item.logout {
+    background: rgba(220, 53, 69, 0.8);
+    border-color: rgba(220, 53, 69, 0.3);
+}
+
+.nav-item.logout:hover {
+    background: rgba(220, 53, 69, 1);
+}
+
+.dashboard-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 20px;
+}
+
+.welcome-section {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.welcome-section h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #7b2cbf;
+}
+
+.welcome-section p {
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.dashboard-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 25px rgba(123, 44, 191, 0.15);
+    border-color: rgba(123, 44, 191, 0.2);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.card-icon {
+    font-size: 2rem;
+    margin-right: 1rem;
+    color: #7b2cbf;
+}
+
+.card-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.card-description {
+    color: #666;
+    line-height: 1.5;
+}
+
+.registration-status {
+    background: linear-gradient(135deg, #7b2cbf, #9d4edd);
+    color: white;
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.registration-status h2 {
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+.get-started-btn {
+    background: white;
+    color: #7b2cbf;
+    border: 2px solid white;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.get-started-btn:hover {
+    background: transparent;
+    color: white;
+}
+
+.faq-section {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    margin-top: 2rem;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.faq-title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem 0;
+    color: white;
+    opacity: 0.8;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.alert {
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: rgba(40, 167, 69, 0.1);
+    border: 1px solid rgba(40, 167, 69, 0.3);
+    color: #28a745;
+}
+
+.alert-error {
+    background: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    color: #dc3545;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #7b2cbf 100%);
+    margin: 5% auto;
+    padding: 2rem;
+    border: 1px solid rgba(199, 125, 255, 0.3);
+    border-radius: 20px;
+    width: 80%;
+    max-width: 600px;
+    color: white;
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.close {
+    color: #c77dff;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+}
+
+.close:hover {
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero p {
+        font-size: 1.1rem;
+    }
+    
+    .illustration-container {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .student-character {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .nav-links {
+        display: none;
+    }
+    
+    .features {
+        grid-template-columns: 1fr;
+    }
+    
+    .curriculum-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .nav-menu {
+        gap: 0.5rem;
+    }
+    
+    .nav-item {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+</style>
+
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <span class="logo-f">F</span>
+                        <span class="logo-i">I</span>
+                        <span class="logo-p">P</span>
+                    </div>
+                    <span class="logo-text">FIP Academy</span>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#curriculum">All Course Outlines</a></li>
+                <li><a href="https://x.com/i/communities/1944756883031466391" target="_blank">Community</a></li>
+                <li><a href="#resources">Resources</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Welcome to FIP Academy's Student Portal!</h1>
+                
+                <div class="hero-illustration">
+                    <div class="illustration-container">
+                        <div class="student-character">
+                            <div class="graduation-cap">
+                                <div class="graduation-tassel"></div>
+                            </div>
+                            <div class="student-head">
+                                <div class="student-hair"></div>
+                                <div class="student-eyes">
+                                    <div class="eye"></div>
+                                    <div class="eye"></div>
+                                </div>
+                                <div class="student-smile"></div>
+                            </div>
+                            <div class="student-body">
+                                <div class="diploma">
+                                    <div class="diploma-ribbon"></div>
+                                </div>
+                            </div>
+                            <div class="laptop">
+                                <div class="laptop-screen"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="floating-elements">
+                            <div class="floating-book"></div>
+                            <div class="floating-code">{ }</div>
+                            <div class="floating-brain">🧠</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <p>Here, you'll have access to a world of web3 knowledge and resources. Explore our courses, connect with fellow students and instructors, and unlock your full potential in the web3 ecosystem.</p>
+                <a href="#login" class="cta-button">Get Started</a>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <span class="feature-icon">🚀</span>
+                <h3>Foundations & Entry</h3>
+                <p>Start with Web3 fundamentals, blockchain basics, wallet security, and NFT creation. Perfect for complete beginners.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">💼</span>
+                <h3>Digital Asset Creation</h3>
+                <p>Master NFT creation, wallet management, content writing, and digital asset monetization strategies.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📢</span>
+                <h3>Community & Marketing</h3>
+                <p>Master Discord/Telegram management, X branding, content writing, and growth strategies in the Web3 space.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">💰</span>
+                <h3>DeFi & Trading</h3>
+                <p>Learn DeFi essentials, on-chain analysis, trading fundamentals, and risk management strategies.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🎨</span>
+                <h3>Design & Development</h3>
+                <p>Create stunning NFTs, build DApps, write smart contracts, and master the technical side of Web3.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📈</span>
+                <h3>Product Management</h3>
+                <p>Plan token launches, manage Web3 projects, create roadmaps, and lead successful blockchain initiatives.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🎯</span>
+                <h3>Career Readiness</h3>
+                <p>Land Web3 jobs with our career preparation, networking guidance, and industry insider knowledge.</p>
+            </div>
+        </section>
+
+        <section class="curriculum-section" id="curriculum">
+            <h2 style="text-align: center; color: white; font-size: 2.5rem; margin-bottom: 1rem;">Choose Your Web3 Specialization</h2>
+            <p style="text-align: center; color: #e0e0e0; margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">Select the course that matches your interests and career goals. Each course is designed to take you from beginner to expert in your chosen field.</p>
+            
+            <div class="curriculum-grid">
+                <div class="curriculum-module">
+                    <div class="module-header">
+                        <span class="module-number">01</span>
+                        <h3>Web3 Foundations Course</h3>
+                    </div>
+                    <ul class="module-content">
+                        <li>Web3 overview & evolution</li>
+                        <li>Decentralization principles</li>
+                        <li>Blockchain fundamentals</li>
+                        <li>Consensus mechanisms (PoW, PoS, L2)</li>
+                    </ul>
+                    <button class="enroll-btn" onclick="selectCourse('foundations')">Enroll in Course</button>
+                </div>
+
+                <div class="curriculum-module">
+                    <div class="module-header">
+                        <span class="module-number">02</span>
+                        <h3>Digital Asset Creator</h3>
+                    </div>
+                    <ul class="module-content">
+                        <li>Wallet setup & security</li>
+                        <li>NFTs: creation, markets, minting</li>
+                        <li>Metadata management</li>
+                        <li>Web3 content writing & storytelling</li>
+                    </ul>
+                    <button class="enroll-btn" onclick="selectCourse('nft')">Enroll in Course</button>
+                </div>
+
+                <div class="curriculum-module">
+                    <div class="module-header">
+                        <span class="module-number">03</span>
+                        <h3>Community & Marketing Specialist</h3>
+                    </div>
+                    <ul class="module-content">
+                        <li>Discord & Telegram management</li>
+                        <li>X/Twitter engagement strategies</li>
+                        <li>Brand building & monetization</li>
+                        <li>Growth hacking in Web3</li>
+                    </ul>
+                    <button class="enroll-btn" onclick="selectCourse('marketing')">Enroll in Course</button>
+                </div>
+
+                <div class="curriculum-module">
+                    <div class="module-header">
+                        <span class="module-number">04</span>
+                        <h3>DeFi & Trading Mastery</h3>
+                    </div>
+                    <ul class="module-content">
+                        <li>DeFi protocol essentials</li>
+                        <li>On-chain analysis tools</li>
+                        <li>Trading basics & OTC strategies</li>
+                        <li>Risk management frameworks</li>
+                    </ul>
+                    <button class="enroll-btn" onclick="selectCourse('defi')">Enroll in Course</button>
+                </div>
+
+                <div class="curriculum-module">
+                    <div class="module-header">
+                        <span class="module-number">05</span>
+                        <h3>Web3 Product Manager</h3>
+                    </div>
+                    <ul class="module-content">
+                        <li>Web3 product lifecycle</li>
+                        <li>Token & NFT launch planning</li>
+                        <li>Roadmap development</li>
+                        <li>Community-driven projects</li>
+                    </ul>
+                    <button class="enroll-btn" onclick="selectCourse('product')">Enroll in Course</button>
+                </div>
+
+                <div class="curriculum-module">
+                    <div class="module-header">
+                        <span class="module-number">06</span>
+                        <h3>Web3 Designer & NFT Artist</h3>
+                    </div>
+                    <ul class="module-content">
+                        <li>NFT design tools & techniques</li>
+                        <li>Visual branding for Web3</li>
+                        <li>Generative art creation</li>
+                        <li>Marketplace optimization</li>
+                    </ul>
+                    <button class="enroll-btn" onclick="selectCourse('design')">Enroll in Course</button>
+                </div>
+
+                <div class="curriculum-module">
+                    <div class="module-header">
+                        <span class="module-number">07</span>
+                        <h3>Web3 Career Transition</h3>
+                    </div>
+                    <ul class="module-content">
+                        <li>Web3 job landscape</li>
+                        <li>Portfolio development</li>
+                        <li>Networking strategies</li>
+                        <li>Interview preparation</li>
+                    </ul>
+                    <button class="enroll-btn" onclick="selectCourse('career')">Enroll in Course</button>
+                </div>
+
+                <div class="curriculum-module advanced">
+                    <div class="module-header">
+                        <span class="module-number">08</span>
+                        <h3>Blockchain Developer</h3>
+                    </div>
+                    <ul class="module-content">
+                        <li>Solidity smart contracts</li>
+                        <li>DApp development with React</li>
+                        <li>Token standards & deployment</li>
+                        <li>Security audits & capstone projects</li>
+                    </ul>
+                    <button class="enroll-btn" onclick="selectCourse('developer')">Enroll in Course</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="login-section" id="login">
+            <div id="authForms">
+                <form class="login-form" id="signupForm" style="display: none;">
+                    <h2>Create Account</h2>
+                    <div class="form-group">
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email Address</label>
+                        <input type="email" id="signupEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" name="password" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required minlength="6">
+                    </div>
+                    <button type="submit" class="login-button">Create Account</button>
+                    <p style="text-align: center; margin-top: 1rem; color: #666;">
+                        Already have an account? <a href="#" onclick="showLoginForm()" style="color: #7b2cbf; text-decoration: none;">Sign in here</a>
+                    </p>
+                </form>
+
+                <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
+                    <h2>Student Login</h2>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="login-button">Access Portal</button>
+                    <p style="text-align: center; margin-top: 1rem; color: #666;">
+                        Don't have an account? <a href="#" onclick="showSignupForm()" style="color: #7b2cbf; text-decoration: none;">Sign up here</a>
+                    </p>
+                </form>
+            </div>
+            
+            <div id="loadingState" style="display: none; text-align: center; padding: 2rem;">
+                <div style="color: #7b2cbf; font-size: 1.2rem;">
+                    <div style="border: 4px solid #f3f3f3; border-top: 4px solid #7b2cbf; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+                    Processing...
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="student-dashboard" id="studentDashboard">
+        <nav class="student-nav">
+            <div class="student-nav-content">
+                <div class="student-logo">
+                    <div class="logo-container">
+                        <div class="logo-icon">
+                            <span class="logo-f">F</span>
+                            <span class="logo-i">I</span>
+                            <span class="logo-p">P</span>
+                        </div>
+                        <span class="logo-text">FIP Academy</span>
+                    </div>
+                </div>
+                <div class="nav-menu">
+                    <div class="nav-item" onclick="openModal('dashboard')">Dashboard</div>
+                    <div class="nav-item" onclick="handleClassroom()">Classroom</div>
+                    <div class="nav-item" onclick="handleAssignments()">Assignments</div>
+                    <div class="nav-item" onclick="handleGrades()">Grades</div>
+                    <div class="nav-item" onclick="openModal('earn')">Earn</div>
+                    <div class="nav-item" onclick="openModal('profile')">Profile</div>
+                    <div class="nav-item logout" onclick="logout()">Logout</div>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="dashboard-content">
+            <div class="welcome-section">
+                <h1 id="welcomeMessage">Hello, Student!</h1>
+                <p id="selectedCourse">You are enrolled in: <strong>No course selected</strong></p>
+                <p>Welcome to your learning portal</p>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="dashboard-card" onclick="window.open('https://x.com/i/communities/1944756883031466391', '_blank')">
+                    <div class="card-header">
+                        <div class="card-icon">📚</div>
+                        <h3 class="card-title">Join Our Community</h3>
+                    </div>
+                    <p class="card-description">Connect with fellow students and instructors in our Twitter community.</p>
+                </div>
+                
+                <div class="dashboard-card" onclick="openModal('courseApp')">
+                    <div class="card-header">
+                        <div class="card-icon">📝</div>
+                        <h3 class="card-title">Course Application</h3>
+                    </div>
+                    <p class="card-description">Apply and enroll for your preferred Web3 specialization course.</p>
+                </div>
+                
+                <div class="dashboard-card" onclick="showAllCourseOutlines()">
+                    <div class="card-header">
+                        <div class="card-icon">📋</div>
+                        <h3 class="card-title">Course Outline</h3>
+                    </div>
+                    <p class="card-description">View detailed curriculum and structure for all available courses.</p>
+                </div>
+                
+                <div class="dashboard-card" onclick="openModal('earn')">
+                    <div class="card-header">
+                        <div class="card-icon">💰</div>
+                        <h3 class="card-title">Earn</h3>
+                    </div>
+                    <p class="card-description">Discover opportunities to monetize your skills and earn while learning.</p>
+                </div>
+                
+                <div class="dashboard-card" onclick="window.open('https://t.me/fipacademy_support', '_blank')">
+                    <div class="card-header">
+                        <div class="card-icon">🎧</div>
+                        <h3 class="card-title">Support</h3>
+                    </div>
+                    <p class="card-description">Get help and support from our dedicated team on Telegram.</p>
+                </div>
+                
+                <div class="dashboard-card" onclick="openModal('faq')">
+                    <div class="card-header">
+                        <div class="card-icon">❓</div>
+                        <h3 class="card-title">FAQ</h3>
+                    </div>
+                    <p class="card-description">Find answers to frequently asked questions about your courses.</p>
+                </div>
+            </div>
+
+            <div id="registeredCoursesSection" style="display: none;">
+                <div class="registration-status">
+                    <h2>Registered Courses</h2>
+                    <div class="no-courses-illustration">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">🎓</div>
+                    </div>
+                    <p id="courseStatus">You are currently not registered to any course</p>
+                    <button class="get-started-btn" onclick="backToDashboard()">Get Started</button>
+                </div>
+            </div>
+
+            <div class="faq-section">
+                <h2 class="faq-title">FREQUENTLY ASKED QUESTIONS & ANSWERS</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="dashboardModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>📊 Dashboard</h2>
+            <p>Your learning overview and progress statistics.</p>
+        </div>
+    </div>
+
+    <div id="earnModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>💰 Earn</h2>
+            <p>Monetize your skills and earn while learning.</p>
+        </div>
+    </div>
+
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>👤 Profile</h2>
+            <p>Manage your account and personal information.</p>
+        </div>
+    </div>
+
+    <div id="courseAppModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>📝 Course Application</h2>
+            <p>Choose your specialization and apply for enrollment.</p>
+        </div>
+    </div>
+
+    <div id="faqModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>❓ FAQ</h2>
+            <p>Frequently asked questions.</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 FIP Academy. Empowering the next generation of innovators.</p>
+        </div>
+    </footer>
+
+    <!-- PASTE BATCH 3 JAVASCRIPT HERE -->
+     
+<script>
+// Firebase Configuration
+const firebaseConfig = {
+    apiKey: "your-api-key-here",
+    authDomain: "fip-academy.firebaseapp.com",
+    projectId: "fip-academy",
+    storageBucket: "fip-academy.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "your-app-id-here"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let selectedCourseData = '';
+let currentUser = null;
+
+// Demo mode for testing
+const DEMO_MODE = true;
+let demoUsers = [];
+
+function showAlert(message, type = 'success') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type}`;
+    alertDiv.textContent = message;
+    
+    const authForms = document.getElementById('authForms');
+    if (authForms) {
+        authForms.insertBefore(alertDiv, authForms.firstChild);
+        
+        setTimeout(() => {
+            if (alertDiv.parentNode) {
+                alertDiv.remove();
+            }
+        }, 5000);
+    }
+}
+
+function showLoadingState() {
+    const authForms = document.getElementById('authForms');
+    const loadingState = document.getElementById('loadingState');
+    if (authForms && loadingState) {
+        authForms.style.display = 'none';
+        loadingState.style.display = 'block';
+    }
+}
+
+function hideLoadingState() {
+    const authForms = document.getElementById('authForms');
+    const loadingState = document.getElementById('loadingState');
+    if (authForms && loadingState) {
+        authForms.style.display = 'block';
+        loadingState.style.display = 'none';
+    }
+}
+
+function showSignupForm() {
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    if (loginForm && signupForm) {
+        loginForm.style.display = 'none';
+        signupForm.style.display = 'block';
+    }
+}
+
+function showLoginForm() {
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    if (loginForm && signupForm) {
+        signupForm.style.display = 'none';
+        loginForm.style.display = 'block';
+    }
+}
+
+// Handle Sign Up
+document.addEventListener('DOMContentLoaded', function() {
+    const signupForm = document.getElementById('signupForm');
+    if (signupForm) {
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('signupName')?.value;
+            const email = document.getElementById('signupEmail')?.value;
+            const password = document.getElementById('signupPassword')?.value;
+            const confirmPassword = document.getElementById('confirmPassword')?.value;
+
+            if (!name || !email || !password || !confirmPassword) {
+                showAlert('Please fill all fields', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showAlert('Passwords do not match!', 'error');
+                return;
+            }
+
+            showLoadingState();
+
+            try {
+                if (DEMO_MODE) {
+                    const existingUser = demoUsers.find(user => user.email === email);
+                    if (existingUser) {
+                        throw new Error('User already exists with this email');
+                    }
+                    
+                    const newUser = {
+                        uid: 'demo_' + Date.now(),
+                        email: email,
+                        name: name,
+                        enrolledCourse: selectedCourseData || 'No course selected',
+                        joinDate: new Date().toLocaleDateString(),
+                        progress: 0,
+                        assignmentsCompleted: 0,
+                        grade: 'New Student'
+                    };
+                    
+                    demoUsers.push(newUser);
+                    currentUser = newUser;
+                    
+                    setTimeout(() => {
+                        hideLoadingState();
+                        showAlert('Account created successfully!', 'success');
+                        setTimeout(() => {
+                            showDashboard();
+                        }, 1500);
+                    }, 2000);
+                } else {
+                    // Real Firebase implementation
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    const user = userCredential.user;
+
+                    await db.collection('users').doc(user.uid).set({
+                        name: name,
+                        email: email,
+                        enrolledCourse: selectedCourseData || 'No course selected',
+                        joinDate: firebase.firestore.FieldValue.serverTimestamp(),
+                        progress: 0,
+                        assignmentsCompleted: 0,
+                        grade: 'New Student'
+                    });
+
+                    hideLoadingState();
+                    showAlert('Account created successfully!', 'success');
+                }
+            } catch (error) {
+                hideLoadingState();
+                showAlert(error.message, 'error');
+            }
+        });
+    }
+});
+
+// Handle Login
+function handleLogin(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('email')?.value;
+    const password = document.getElementById('password')?.value;
+
+    if (!email || !password) {
+        showAlert('Please enter both email and password', 'error');
+        return;
+    }
+
+    showLoadingState();
+
+    setTimeout(() => {
+        try {
+            if (DEMO_MODE) {
+                let user = demoUsers.find(u => u.email === email);
+                
+                if (!user) {
+                    // Create a demo user if doesn't exist
+                    user = {
+                        uid: 'demo_' + Date.now(),
+                        email: email,
+                        name: email.split('@')[0],
+                        enrolledCourse: selectedCourseData || 'No course selected',
+                        joinDate: new Date().toLocaleDateString(),
+                        progress: Math.floor(Math.random() * 50),
+                        assignmentsCompleted: Math.floor(Math.random() * 5),
+                        grade: 'Active Student'
+                    };
+                    demoUsers.push(user);
+                }
+                
+                currentUser = user;
+                hideLoadingState();
+                showDashboard();
+            }
+        } catch (error) {
+            hideLoadingState();
+            showAlert('Login failed. Please try again.', 'error');
+        }
+    }, 1500);
+}
+
+function showDashboard() {
+    const header = document.querySelector('header');
+    const main = document.querySelector('main');
+    const footer = document.querySelector('footer');
+    const dashboard = document.getElementById('studentDashboard');
+    
+    if (header) header.style.display = 'none';
+    if (main) main.style.display = 'none';
+    if (footer) footer.style.display = 'none';
+    if (dashboard) dashboard.style.display = 'block';
+    
+    updateDashboardData();
+}
+
+function updateDashboardData() {
+    if (currentUser) {
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const selectedCourse = document.getElementById('selectedCourse');
+        
+        if (welcomeMessage) {
+            welcomeMessage.textContent = `Hey, ${currentUser.name}!`;
+        }
+        
+        if (selectedCourse) {
+            selectedCourse.innerHTML = `You are enrolled in: <strong>${currentUser.enrolledCourse}</strong>`;
+        }
+    }
+}
+
+function selectCourse(courseType) {
+    const courseNames = {
+        'foundations': 'Web3 Foundations Course',
+        'nft': 'Digital Asset Creator',
+        'marketing': 'Community & Marketing Specialist',
+        'defi': 'DeFi & Trading Mastery',
+        'product': 'Web3 Product Manager',
+        'design': 'Web3 Designer & NFT Artist',
+        'career': 'Web3 Career Transition',
+        'developer': 'Blockchain Developer'
+    };
+    
+    selectedCourseData = courseNames[courseType];
+    showAlert(`Great choice! You've selected: ${selectedCourseData}. Please create an account or login to enroll.`, 'success');
+    
+    const loginSection = document.getElementById('login');
+    if (loginSection) {
+        loginSection.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function openModal(modalType) {
+    const modal = document.getElementById(modalType + 'Modal');
+    if (modal) {
+        modal.style.display = 'block';
+    }
+}
+
+function handleClassroom() {
+    if (!currentUser || currentUser.enrolledCourse === 'No course selected') {
+        showAlert('Please enroll in a course first to access the classroom.', 'error');
+        openModal('courseApp');
+    } else {
+        showAlert(`Welcome to your ${currentUser.enrolledCourse} classroom! Course content will be available soon.`, 'success');
+    }
+}
+
+function handleAssignments() {
+    if (!currentUser || currentUser.enrolledCourse === 'No course selected') {
+        showAlert('Please enroll in a course first to view assignments.', 'error');
+        openModal('courseApp');
+    } else {
+        showAlert(`Assignments for ${currentUser.enrolledCourse} will be available soon.`, 'success');
+    }
+}
+
+function handleGrades() {
+    if (!currentUser || currentUser.enrolledCourse === 'No course selected') {
+        showAlert('Please enroll in a course first to view grades.', 'error');
+        openModal('courseApp');
+    } else {
+        showAlert(`Grades for ${currentUser.enrolledCourse} will be available soon.`, 'success');
+    }
+}
+
+function showAllCourseOutlines() {
+    showAlert('Course outlines will be available soon. You can view basic course information in the main page.', 'success');
+}
+
+function logout() {
+    currentUser = null;
+    selectedCourseData = '';
+    
+    const header = document.querySelector('header');
+    const main = document.querySelector('main');
+    const footer = document.querySelector('footer');
+    const dashboard = document.getElementById('studentDashboard');
+    
+    if (header) header.style.display = 'block';
+    if (main) main.style.display = 'block';
+    if (footer) footer.style.display = 'block';
+    if (dashboard) dashboard.style.display = 'none';
+    
+    // Clear forms
+    const emailField = document.getElementById('email');
+    const passwordField = document.getElementById('password');
+    if (emailField) emailField.value = '';
+    if (passwordField) passwordField.value = '';
+    
+    showLoginForm();
+    showAlert('You have been logged out successfully!', 'success');
+}
+
+// Close modals when clicking outside or on X
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+    }
+    
+    if (event.target.classList.contains('close')) {
+        const modal = event.target.closest('.modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+});
+
+// Smooth scrolling for navigation links
+document.addEventListener('DOMContentLoaded', function() {
+    const links = document.querySelectorAll('a[href^="#"]');
+    links.forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+    
+    // Initialize card animations
+    const cards = document.querySelectorAll('.feature-card, .curriculum-module');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(50px)';
+        card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+    });
+    
+    // Scroll animation
+    window.addEventListener('scroll', () => {
+        cards.forEach(card => {
+            const cardTop = card.getBoundingClientRect().top;
+            const cardVisible = 150;
+            
+            if (cardTop < window.innerHeight - cardVisible) {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }
+        });
+    });
+});
+</script>    
+</body>
+</html>
+
